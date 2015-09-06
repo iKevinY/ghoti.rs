@@ -2,3 +2,6 @@
 name = "ghoti"
 version = "0.1.0"
 authors = ["Kevin Yap <me@kevinyap.ca>"]
+
+[dependencies]
+getopts = "0.2.4"
