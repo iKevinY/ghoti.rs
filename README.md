@@ -1,6 +1,6 @@
 # ghoti.rs [![1]][2]
 
-`ghoti.rs` (pronounced /ˈfɪʃərz/) is a spell checker written in Rust.
+`ghoti.rs` (pronounced [/ˈfɪʃərz/]) is a spell checker written in Rust.
 
 
 ## Rationale
@@ -24,5 +24,6 @@ and developed as an exercise in learning Rust. As for the name of the project:
 [1]: https://travis-ci.org/iKevinY/ghoti.rs.svg "Build Status"
 [2]: https://travis-ci.org/iKevinY/ghoti.rs
 
+[/ˈfɪʃərz/]: https://en.wikipedia.org/wiki/Fishermen
 [How to Write a Spelling Corrector]: http://norvig.com/spell-correct.html
 [MIT License]: https://github.com/iKevinY/ghoti.rs/blob/master/LICENSE
