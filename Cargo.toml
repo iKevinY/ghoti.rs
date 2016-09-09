@@ -2,6 +2,19 @@
 name = "ghoti"
 version = "0.1.0"
 authors = ["Kevin Yap <me@kevinyap.ca>"]
+homepage = "https://github.com/iKevinY/ghoti.rs"
+repository = "https://github.com/iKevinY/ghoti.rs"
+readme = "README.md"
+license = "MIT"
+
+[[bin]]
+name = "ghoti"
+path = "src/main.rs"
+test = false
+doc = false
+
+[lib]
+path = "src/ghoti.rs"
 
 [dependencies]
 getopts = "0.2.4"

@@ -1,3 +1,4 @@
+extern crate ghoti;
 extern crate getopts;
 
 use getopts::Options;
