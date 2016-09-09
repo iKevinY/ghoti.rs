@@ -18,3 +18,5 @@ path = "src/ghoti.rs"
 
 [dependencies]
 getopts = "0.2.4"
+lazy_static = "0.2.1"
+regex = "0.1"
