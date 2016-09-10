@@ -152,27 +152,32 @@ fn edits2(word: &str) -> HashSet<String> {
 }
 
 
-#[test]
-fn edit_count() {
-    // Words of length n > 1 will have:
-    // - n deletions
-    // - n-1 transpositions
-    // - 26n replacements
-    // - 26(n+1) insertions
-    // = 54n + 25 total edits
+#[cfg(test)]
+mod tests {
+    use super::{candidates, edits};
 
-    let test_word = "!@#$%^&*()";
+    #[test]
+    fn edit_count() {
+        // Words of length n > 1 will have:
+        // - n deletions
+        // - n-1 transpositions
+        // - 26n replacements
+        // - 26(n+1) insertions
+        // = 54n + 25 total edits
 
-    for i in 1..(test_word.len() + 1) {
-        assert_eq!(edits(&test_word[..i]).len(), 54*i + 25);
+        let test_word = "!@#$%^&*()";
+
+        for i in 1..(test_word.len() + 1) {
+            assert_eq!(edits(&test_word[..i]).len(), 54 * i + 25);
+        }
     }
-}
 
-#[test]
-fn possible_candidates() {
-    let candidates = candidates("ct");
-    assert!(candidates.contains("cat"));
-    assert!(candidates.contains("cot"));
-    assert!(candidates.contains("cut"));
-    assert!(!candidates.contains("czt"));
+    #[test]
+    fn possible_candidates() {
+        let candidates = candidates("ct");
+        assert!(candidates.contains("cat"));
+        assert!(candidates.contains("cot"));
+        assert!(candidates.contains("cut"));
+        assert!(!candidates.contains("czt"));
+    }
 }
