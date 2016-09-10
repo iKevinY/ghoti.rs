@@ -100,7 +100,7 @@ fn edits(word: &str) -> HashSet<String> {
     for (i, &(left, right)) in splits.iter().enumerate() {
         // Deletions
         let mut deletion = left.to_string();
-        deletion += &right[1..];
+        deletion = deletion + &right[1..];
         all_edits.insert(deletion);
 
         // Transpositions
@@ -109,7 +109,7 @@ fn edits(word: &str) -> HashSet<String> {
             let mut transposition = left.to_string();
             transposition.push(right.chars().nth(1).unwrap());
             transposition.push(right.chars().nth(0).unwrap());
-            transposition += &right[2..];
+            transposition = transposition + &right[2..];
             all_edits.insert(transposition);
         }
 
@@ -117,13 +117,13 @@ fn edits(word: &str) -> HashSet<String> {
             // Replacements
             let mut replacement = left.to_string();
             replacement.push(letter);
-            replacement += &right[1..];
+            replacement = replacement + &right[1..];
             all_edits.insert(replacement);
 
             // Insertions
             let mut insertion = left.to_string();
             insertion.push(letter);
-            insertion += right;
+            insertion = insertion + right;
             all_edits.insert(insertion);
         }
     }
