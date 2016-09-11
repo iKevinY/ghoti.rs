@@ -34,7 +34,7 @@ pub fn correction(word: &str) -> String {
         return String::from("");
     }
 
-    let mut best_match = word.to_string();
+    let mut best_match = String::from(word);
     let mut best_score = 0;
 
     for candidate in candidates(word) {
@@ -46,13 +46,13 @@ pub fn correction(word: &str) -> String {
         }
     }
 
-    return best_match.to_string();
+    return best_match;
 }
 
 /// Generate possible spelling corrections for `word`.
 fn candidates(word: &str) -> HashSet<String> {
     let mut word_set = HashSet::new();
-    word_set.insert(word.to_string());
+    word_set.insert(String::from(word));
 
     if WORDS.contains_key(word) {
         return word_set;
@@ -83,52 +83,48 @@ fn known(words: HashSet<String>) -> Option<HashSet<String>> {
 
 /// All edits that are one edit away from `word`.
 fn edits(word: &str) -> HashSet<String> {
-    let letters = "abcdefghijklmnopqrstuvwxyz";
+    // String containing lowercase letters in alphabetical order
+    let letters = String::from_utf8((97..123).collect()).unwrap();
 
     // Construct vector of split variants of `word`
-    // ghoti -> [("", "ghoti"), ("g", "hoti"), ... ("ghot", "i")]
-    let mut splits: Vec<(&str, &str)> = Vec::new();
-    for i in 0..word.len() {
-        splits.push((&word[..i], &word[i..]));
-    }
-
-    let mut all_edits: HashSet<String> = HashSet::new();
+    // cat -> [("", "cat"), ("c", "at"), ("ca", "t")]
+    let splits: Vec<_> = (0..word.len()).map(|i| (&word[..i], &word[i..])).collect();
 
     // Iterate through different edit permutations
-    for (i, &(left, right)) in splits.iter().enumerate() {
+    let mut all_edits = HashSet::new();
+
+    for (left, right) in splits {
         // Deletions
-        let mut deletion = left.to_string();
+        let mut deletion = String::from(left);
         deletion = deletion + &right[1..];
         all_edits.insert(deletion);
 
         // Transpositions
-        // Skip the final split to ensure `right` contains > 1 character
-        if i < splits.len() - 1 {
-            let mut transposition = left.to_string();
-            transposition.push(right.chars().nth(1).unwrap());
-            transposition.push(right.chars().nth(0).unwrap());
-            transposition = transposition + &right[2..];
+        if right.len() > 1 {
+            let mut transposition = String::from(left);
+            let middle: &String = &right[..2].chars().rev().collect();
+            transposition = transposition + middle + &right[2..];
             all_edits.insert(transposition);
         }
 
         for letter in letters.chars() {
             // Replacements
-            let mut replacement = left.to_string();
+            let mut replacement = String::from(left);
             replacement.push(letter);
             replacement = replacement + &right[1..];
             all_edits.insert(replacement);
 
             // Insertions
-            let mut insertion = left.to_string();
+            let mut insertion = String::from(left);
             insertion.push(letter);
             insertion = insertion + right;
             all_edits.insert(insertion);
         }
     }
 
-    // Insertions at end of word (appends?)
+    // End-of-word insertions (appends?)
     for letter in letters.chars() {
-        let mut insertion = word.to_string();
+        let mut insertion = String::from(word);
         insertion.push(letter);
         all_edits.insert(insertion);
     }
@@ -163,10 +159,11 @@ mod tests {
         // - 26(n+1) insertions
         // = 54n + 25 total edits
 
+        // Use a punctuation-based test word to ensure unique edits
         let test_word = "!@#$%^&*()";
 
         for i in 1..(test_word.len() + 1) {
-            assert_eq!(edits(&test_word[..i]).len(), 54 * i + 25);
+            assert_eq!(edits(&test_word[..i]).len(), 54*i + 25);
         }
     }
 
