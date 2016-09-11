@@ -54,17 +54,15 @@ fn candidates(word: &str) -> HashSet<String> {
     let mut word_set = HashSet::new();
     word_set.insert(word.to_string());
 
-    if let Some(set) = known(word_set) {
-        return set;
-    } else if let Some(set) = known(edits(word)) {
-        return set;
-    } else if let Some(set) = known(edits2(word)) {
-        return set;
-    } else {
-        let mut word_set = HashSet::new();
-        word_set.insert(word.to_string());
+    if WORDS.contains_key(word) {
         return word_set;
+    } else if let Some(single_edits) = known(edits(word)) {
+        return single_edits;
+    } else if let Some(double_edits) = known(edits2(word)) {
+        return double_edits;
     }
+
+    return word_set;
 }
 
 /// The subset of `words` that appear in the dictionary of WORDS
@@ -77,9 +75,9 @@ fn known(words: HashSet<String>) -> Option<HashSet<String>> {
         }
     }
 
-    match known_words.len() {
-        0 => None,
-        _ => Some(known_words),
+    match known_words.is_empty() {
+        false => return Some(known_words),
+        true => return None,
     }
 }
 
