@@ -1,5 +1,7 @@
 extern crate ghoti;
+
 use ghoti::correction;
+
 
 #[test]
 fn empty_correction() {
