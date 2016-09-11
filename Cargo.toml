@@ -16,7 +16,7 @@ test = false
 doc = false
 
 [lib]
-path = "src/ghoti.rs"
+path = "src/lib.rs"
 
 [dependencies]
 getopts = "0.2"
