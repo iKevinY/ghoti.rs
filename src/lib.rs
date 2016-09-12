@@ -2,7 +2,7 @@
 extern crate lazy_static;
 extern crate regex;
 
-use std::collections::{HashMap, HashSet};
+use std::collections::HashMap;
 use std::io::Read;
 use std::fs::File;
 
@@ -50,9 +50,9 @@ pub fn correction(word: &str) -> String {
 }
 
 /// Generate possible spelling corrections for `word`.
-fn candidates(word: &str) -> HashSet<String> {
-    let mut word_set = HashSet::new();
-    word_set.insert(String::from(word));
+fn candidates(word: &str) -> Vec<String> {
+    let mut word_set = Vec::new();
+    word_set.push(String::from(word));
 
     if WORDS.contains_key(word) {
         return word_set;
@@ -66,12 +66,12 @@ fn candidates(word: &str) -> HashSet<String> {
 }
 
 /// The subset of `words` that appear in the dictionary of WORDS
-fn known(words: HashSet<String>) -> Option<HashSet<String>> {
-    let mut known_words = HashSet::new();
+fn known(words: Vec<String>) -> Option<Vec<String>> {
+    let mut known_words = Vec::new();
 
     for word in words {
         if WORDS.contains_key(&word) {
-            known_words.insert(word);
+            known_words.push(word);
         }
     }
 
@@ -82,7 +82,7 @@ fn known(words: HashSet<String>) -> Option<HashSet<String>> {
 }
 
 /// All edits that are one edit away from `word`.
-fn edits(word: &str) -> HashSet<String> {
+fn edits(word: &str) -> Vec<String> {
     // String containing lowercase letters in alphabetical order
     let letters = String::from_utf8((97..123).collect()).unwrap();
 
@@ -90,35 +90,31 @@ fn edits(word: &str) -> HashSet<String> {
     // cat -> [("", "cat"), ("c", "at"), ("ca", "t")]
     let splits: Vec<_> = (0..word.len()).map(|i| (&word[..i], &word[i..])).collect();
 
-    // Iterate through different edit permutations
-    let mut all_edits = HashSet::new();
+    // Iterate through different edit permutations (at most 54n + 25)
+    let mut all_edits = Vec::with_capacity(word.len() * 54 + 25);
 
     for (left, right) in splits {
         // Deletions
-        let mut deletion = String::from(left);
-        deletion = deletion + &right[1..];
-        all_edits.insert(deletion);
+        let deletion = String::from(left);
+        all_edits.push(deletion + &right[1..]);
 
         // Transpositions
         if right.len() > 1 {
-            let mut transposition = String::from(left);
+            let transposition = String::from(left);
             let middle: &String = &right[..2].chars().rev().collect();
-            transposition = transposition + middle + &right[2..];
-            all_edits.insert(transposition);
+            all_edits.push(transposition + middle + &right[2..]);
         }
 
         for letter in letters.chars() {
             // Replacements
             let mut replacement = String::from(left);
             replacement.push(letter);
-            replacement = replacement + &right[1..];
-            all_edits.insert(replacement);
+            all_edits.push(replacement + &right[1..]);
 
             // Insertions
             let mut insertion = String::from(left);
             insertion.push(letter);
-            insertion = insertion + right;
-            all_edits.insert(insertion);
+            all_edits.push(insertion + right);
         }
     }
 
@@ -126,19 +122,19 @@ fn edits(word: &str) -> HashSet<String> {
     for letter in letters.chars() {
         let mut insertion = String::from(word);
         insertion.push(letter);
-        all_edits.insert(insertion);
+        all_edits.push(insertion);
     }
 
     return all_edits;
 }
 
 /// All edits that are two edits away from `word`
-fn double_edits(word: &str) -> HashSet<String> {
-    let mut all_edits = HashSet::new();
+fn double_edits(word: &str) -> Vec<String> {
+    let mut all_edits = Vec::new();
 
     for single_edit in edits(word) {
         for double_edit in edits(&single_edit) {
-            all_edits.insert(double_edit);
+            all_edits.push(double_edit);
         }
     }
 
@@ -148,7 +144,7 @@ fn double_edits(word: &str) -> HashSet<String> {
 
 #[cfg(test)]
 mod tests {
-    use super::{candidates, edits};
+    use super::{edits, candidates};
 
     #[test]
     fn edit_count() {
@@ -169,10 +165,10 @@ mod tests {
 
     #[test]
     fn possible_candidates() {
-        let candidates = candidates("ct");
-        assert!(candidates.contains("cat"));
-        assert!(candidates.contains("cot"));
-        assert!(candidates.contains("cut"));
-        assert!(!candidates.contains("czt"));
+        let candidates = candidates("ther");
+
+        for word in vec!["there", "the", "their", "her"] {
+            assert!(candidates.contains(&String::from(word)));
+        }
     }
 }
