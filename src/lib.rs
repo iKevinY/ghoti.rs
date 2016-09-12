@@ -58,7 +58,7 @@ fn candidates(word: &str) -> HashSet<String> {
         return word_set;
     } else if let Some(single_edits) = known(edits(word)) {
         return single_edits;
-    } else if let Some(double_edits) = known(edits2(word)) {
+    } else if let Some(double_edits) = known(double_edits(word)) {
         return double_edits;
     }
 
@@ -133,12 +133,12 @@ fn edits(word: &str) -> HashSet<String> {
 }
 
 /// All edits that are two edits away from `word`
-fn edits2(word: &str) -> HashSet<String> {
+fn double_edits(word: &str) -> HashSet<String> {
     let mut all_edits = HashSet::new();
 
-    for single_edits in edits(word) {
-        for edit in edits(&single_edits) {
-            all_edits.insert(edit);
+    for single_edit in edits(word) {
+        for double_edit in edits(&single_edit) {
+            all_edits.insert(double_edit);
         }
     }
 
