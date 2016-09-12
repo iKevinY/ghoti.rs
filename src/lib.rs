@@ -46,7 +46,7 @@ pub fn correction(word: &str) -> String {
         }
     }
 
-    return best_match;
+    best_match
 }
 
 /// Generate possible spelling corrections for `word`.
@@ -55,14 +55,14 @@ fn candidates(word: &str) -> Vec<String> {
     word_set.push(String::from(word));
 
     if WORDS.contains_key(word) {
-        return word_set;
+        word_set
     } else if let Some(single_edits) = known(edits(word)) {
-        return single_edits;
+        single_edits
     } else if let Some(double_edits) = known(double_edits(word)) {
-        return double_edits;
+        double_edits
+    } else {
+        word_set
     }
-
-    return word_set;
 }
 
 /// The subset of `words` that appear in the dictionary of WORDS
@@ -75,9 +75,10 @@ fn known(words: Vec<String>) -> Option<Vec<String>> {
         }
     }
 
-    match known_words.is_empty() {
-        false => return Some(known_words),
-        true => return None,
+    if known_words.is_empty() {
+        None
+    } else {
+        Some(known_words)
     }
 }
 
@@ -125,7 +126,7 @@ fn edits(word: &str) -> Vec<String> {
         all_edits.push(insertion);
     }
 
-    return all_edits;
+    all_edits
 }
 
 /// All edits that are two edits away from `word`
@@ -138,7 +139,7 @@ fn double_edits(word: &str) -> Vec<String> {
         }
     }
 
-    return all_edits;
+    all_edits
 }
 
 
