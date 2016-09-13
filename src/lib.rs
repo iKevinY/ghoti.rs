@@ -67,13 +67,7 @@ fn candidates(word: &str) -> Vec<String> {
 
 /// The subset of `words` that appear in the dictionary of WORDS
 fn known(words: Vec<String>) -> Option<Vec<String>> {
-    let mut known_words = Vec::new();
-
-    for word in words {
-        if WORDS.contains_key(&word) {
-            known_words.push(word);
-        }
-    }
+    let known_words: Vec<_> = words.iter().filter(|&w| WORDS.contains_key(w)).cloned().collect();
 
     if known_words.is_empty() {
         None
@@ -89,10 +83,10 @@ fn edits(word: &str) -> Vec<String> {
 
     // Construct vector of split variants of `word`
     // cat -> [("", "cat"), ("c", "at"), ("ca", "t")]
-    let splits: Vec<_> = (0..word.len()).map(|i| (&word[..i], &word[i..])).collect();
+    let splits: Vec<_> = (0..word.len()).map(|i| word.split_at(i)).collect();
 
     // Iterate through different edit permutations (at most 54n + 25)
-    let mut all_edits = Vec::with_capacity(word.len() * 54 + 25);
+    let mut all_edits = Vec::with_capacity(54 * word.len() + 25);
 
     for (left, right) in splits {
         // Deletions
@@ -131,15 +125,7 @@ fn edits(word: &str) -> Vec<String> {
 
 /// All edits that are two edits away from `word`
 fn double_edits(word: &str) -> Vec<String> {
-    let mut all_edits = Vec::new();
-
-    for single_edit in edits(word) {
-        for double_edit in edits(&single_edit) {
-            all_edits.push(double_edit);
-        }
-    }
-
-    all_edits
+    edits(word).iter().flat_map(|e| edits(e)).collect()
 }
 
 
