@@ -2,15 +2,12 @@ extern crate ghoti;
 extern crate getopts;
 
 use getopts::Options;
-
+use ghoti::correction;
 use std::env;
-use std::fs::File;
-use std::path::Path;
-
 
 
 fn print_usage(opts: Options) {
-    let usage = "Usage: ghoti [options] <filename>";
+    let usage = "Usage: ghoti [options] <word>";
     print!("{}", opts.usage(usage));
 }
 
@@ -33,10 +30,5 @@ fn main() {
         return;
     }
 
-    let filename = matches.free[0].clone();
-
-    match File::open(Path::new(&filename)) {
-        Ok(_) => println!("Hello, {}!", filename),
-        Err(_) => panic!("Couldn't open {}.", filename),
-    };
+    println!("{}", correction(&matches.free[0]));
 }
