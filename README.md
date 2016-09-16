@@ -1,6 +1,6 @@
 # ghoti.rs [![1]][2]
 
-`ghoti.rs` (pronounced [/ˈfɪʃərz/]) is a toy spell checker written in Rust.
+`ghoti.rs` (pronounced [/ˈfɪʃərz/]) is a toy spell checker written in Rust. :fishing_pole_and_fish:
 
 
 ## Rationale
