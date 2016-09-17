@@ -30,5 +30,6 @@ fn main() {
         return;
     }
 
-    println!("{}", correction(&matches.free[0]));
+    let word = matches.free[0].to_lowercase();
+    println!("{}", correction(&word));
 }
