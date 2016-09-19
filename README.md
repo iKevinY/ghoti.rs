@@ -1,12 +1,8 @@
 # ghoti.rs [![1]][2]
 
-`ghoti.rs` (pronounced [/ˈfɪʃərz/]) is a toy spell checker written in Rust. :fishing_pole_and_fish:
-
-
-## Rationale
-
-`ghoti.rs` was inspired by Peter Norvig's [How to Write a Spelling Corrector]
-and developed as an exercise in learning Rust. As for the name of the project:
+`ghoti.rs` (pronounced [/ˈfɪʃərz/] :fishing_pole_and_fish:) is a toy spell checker
+written in Rust, inspired by Peter Norvig's [How to Write a Spelling Corrector],
+and developed as an exercise in learning Rust. The project was named after the word _ghoti_.
 
 > Ghoti is intended to be pronounced as */ˈfɪʃ/* (:tropical_fish:), using these sounds:
 > - gh, pronounced *[f]* as in tou**gh** *[tʌf]*
