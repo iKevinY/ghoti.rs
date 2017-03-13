@@ -34,25 +34,15 @@ pub fn correction(word: &str) -> String {
         return String::from("");
     }
 
-    let mut best_match = String::from(word);
-    let mut best_score = 0;
-
-    for candidate in candidates(word) {
-        if let Some(score) = WORDS.get(&candidate) {
-            if *score > best_score {
-                best_score = *score;
-                best_match = candidate;
-            }
-        }
-    }
-
-    best_match
+    candidates(word).iter()
+        .max_by_key(|&c| WORDS.get(c))
+        .unwrap()
+        .to_owned()
 }
 
 /// Generate possible spelling corrections for `word`.
 fn candidates(word: &str) -> Vec<String> {
-    let mut word_set = Vec::new();
-    word_set.push(String::from(word));
+    let word_set = vec![word.to_string()];
 
     if WORDS.contains_key(word) {
         word_set
@@ -67,7 +57,10 @@ fn candidates(word: &str) -> Vec<String> {
 
 /// The subset of `words` that appear in the dictionary of WORDS
 fn known(words: Vec<String>) -> Option<Vec<String>> {
-    let known_words: Vec<_> = words.iter().filter(|&w| WORDS.contains_key(w)).cloned().collect();
+    let known_words: Vec<_> = words.iter()
+        .filter(|&w| WORDS.contains_key(w))
+        .cloned()
+        .collect();
 
     if known_words.is_empty() {
         None
